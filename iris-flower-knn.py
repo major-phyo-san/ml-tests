@@ -1,38 +1,35 @@
 import numpy as np
-from matplotlib import pyplot as plt
-from matplotlib import cm
 import pandas as pd
-from pandas.plotting import scatter_matrix
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
-# load dataset
-dataset = load_iris()
+#load dataset
+dataframe = pd.read_csv("test-datasets/classification/iris.csv",sep=",")
 
-# dataset keys info:
-print(dataset.keys())
+#dataframe shuffling
+dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
 
-# training set, test sets splitting
-X_train, X_test, y_train, y_test = train_test_split(dataset['data'], dataset['target'], random_state=0)
+#training set, test set splitting
+train_set = dataframe.sample(frac=0.8, random_state=200)
+test_set = dataframe.drop(train_set.index)
 
-# shape of training data
-print(X_train.shape)
-print(y_train.shape)
+#training set features and target
+X_train = train_set[["sepal width (cm)", "sepal length (cm)", "petal width (cm)", "petal length (cm)"]]
+y_train = train_set[["species"]]
 
-# creating a pandas dataframe from feature names in dataset
-dataframe = pd.DataFrame(X_train, columns=dataset.feature_names)
+#test set features and target
+X_test = test_set[["sepal width (cm)", "sepal length (cm)", "petal width (cm)", "petal length (cm)"]]
+y_test = test_set[["species"]]
 
-# visualizing dataframe
-scatter_matrix(dataframe, c=y_train, figsize=(15,15), marker=".", 
-hist_kwds={'bins':20}, s=60, alpha=0.8, cmap=cm.get_cmap('Spectral'))
-plt.show()
+#inspect dataframe
+print(dataframe.describe())
 
-# we'll predict new data with K-Nearest Neighbor algorithm with max neighbor 1
-knn = KNeighborsClassifier(n_neighbors=1)
+#train the model with K-Nearest Neighbor algorithm with max neighbor 'n'
+knn = KNeighborsClassifier(n_neighbors=3)
 knn.fit(X_train, y_train)
 
-# test the accuracy with the test set
-y_pred = knn.predict(X_test)
-print(dataset['target_names'][y_pred])
-print("accuracy = " + str(knn.score(X_test, y_test)))
+#make predictions on the test set 
+prediction = knn.predict(X_test)
+
+#determine the accuracy
+print("Training set accuracy : ", knn.score(X_train, y_train))
+print("Test set accuracy : ", knn.score(X_test, y_test))

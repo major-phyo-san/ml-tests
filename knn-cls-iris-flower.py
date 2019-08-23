@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
+from matplotlib import pyplot as plt
 
 #load dataset
 dataframe = pd.read_csv("test-datasets/classification/iris.csv",sep=",")
@@ -24,12 +25,24 @@ y_test = test_set[["species"]]
 print(dataframe.describe())
 
 #train the model with K-Nearest Neighbor algorithm with max neighbor 'n'
-knn = KNeighborsClassifier(n_neighbors=3)
-knn.fit(X_train, y_train)
+training_accuracy = []
+test_accuracy = []
+neighbors_settings = range(1,5)
+for n_neighbor in neighbors_settings:
+	knn = KNeighborsClassifier(n_neighbors=n_neighbor)
+	knn.fit(X_train, y_train)
+	training_accuracy.append(knn.score(X_train, y_train))
+	test_accuracy.append(knn.score(X_test, y_test))
 
 #make predictions on the test set 
 prediction = knn.predict(X_test)
 
 #determine the accuracy
-print("Training set accuracy : ", knn.score(X_train, y_train))
-print("Test set accuracy : ", knn.score(X_test, y_test))
+print("Training set accuracy : ", training_accuracy)
+print("Test set accuracy : ", test_accuracy)
+plt.plot(neighbors_settings, training_accuracy, color="blue", label="training accuracy")
+plt.plot(neighbors_settings, test_accuracy, color="red", label="test accuracy")
+plt.xlabel("No: of neighbors")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()

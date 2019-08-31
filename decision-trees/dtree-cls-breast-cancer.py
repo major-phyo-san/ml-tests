@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 from matplotlib import pyplot as plt
 
 #load dataset
-dataframe = pd.read_csv("test-datasets/classification/breast_cancer.csv",sep=",")
+dataframe = pd.read_csv("../test-datasets/classification/breast_cancer.csv",sep=",")
 
 #dataframe shuffling
 dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
@@ -31,29 +31,22 @@ X_test = test_set[["mean radius","mean texture","mean perimeter","mean area","me
 "worst concave points","worst symmetry","worst fractal dimension"]]
 y_test = test_set[["cancerous"]]
 
-#inspect dataframe
-print(dataframe.describe())
-
-#train the model with K-Nearest Neighbor algorithm with max neighbor 'n_neighbor'
+#train the model with Decision Tree
+depth_settings = [1,2,4,8]
 training_accuracy = []
 test_accuracy = []
-neighbors_settings = range(1,5)
-for n_neighbor in neighbors_settings:
-	knn = KNeighborsClassifier(n_neighbors=n_neighbor)
-	knn.fit(X_train, y_train)
-	training_accuracy.append(knn.score(X_train, y_train))
-	test_accuracy.append(knn.score(X_test, y_test))
-
-#make predictions on the test set 
-prediction = knn.predict(X_test)
+for depth_setting in depth_settings:
+	d_tree = DecisionTreeClassifier(max_depth=depth_setting,random_state=0)
+	d_tree.fit(X_train,y_train)
+	training_accuracy.append(d_tree.score(X_train,y_train))
+	test_accuracy.append(d_tree.score(X_test,y_test))
 
 #determine the accuracy
 print("Training set accuracy : ", training_accuracy)
 print("Test set accuracy : ", test_accuracy)
-plt.plot(neighbors_settings, training_accuracy, color="blue", label="training accuracy")
-plt.plot(neighbors_settings, test_accuracy, color="red", label="test accuracy")
-plt.xlabel("No: of neighbors")
-plt.ylabel("Accuracy")
+plt.plot(depth_settings, training_accuracy, color="blue", label="training accuracy")
+plt.plot(depth_settings, test_accuracy, color="red", label="test accuracy")
 plt.legend()
+plt.xlabel("Max Tree Depth")
+plt.ylabel("Accuracy")
 plt.show()
-

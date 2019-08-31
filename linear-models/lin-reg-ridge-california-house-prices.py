@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import Ridge
 from matplotlib import pyplot as plt
 
 #load dataset
-dataframe = pd.read_csv("test-datasets/regression/california_housing_train.csv",sep=",")
+dataframe = pd.read_csv("../test-datasets/regression/california_housing_train.csv",sep=",")
 
 #dataframe shuffling
 dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
@@ -26,25 +26,28 @@ y_test = test_set[["median_house_value"]]
 #inspect dataframe
 print(dataframe.describe())
 
-#train the model with K-Nearest Neighbor algorithm with max neighbor 'n'
+#train the model with Linear Regressor with various Alpha values
 training_accuracy = []
 test_accuracy = []
-neighbors_settings = range(1,10)
-for n_neighbor in neighbors_settings:
-	knn = KNeighborsRegressor(n_neighbors=n_neighbor)
-	knn.fit(X_train, y_train)
-	training_accuracy.append(knn.score(X_train, y_train))
-	test_accuracy.append(knn.score(X_test, y_test))
-
-#make predictions on the test set 
-prediction = knn.predict(X_test)
+intercept_b = []
+coefficients_w = []
+alpha_settings = [0.0,0.1,0.25,0.5,0.75,1]
+for alpha_setting in alpha_settings:
+	lin = Ridge(alpha=alpha_setting)
+	lin.fit(X_train,y_train)
+	training_accuracy.append(lin.score(X_train, y_train))
+	test_accuracy.append(lin.score(X_test, y_test))
+	intercept_b.append(lin.intercept_)
+	coefficients_w.append(lin.coef_)
 
 #determine the accuracy
 print("Training set accuracy : ", training_accuracy)
 print("Test set accuracy : ", test_accuracy)
-plt.plot(neighbors_settings, training_accuracy, color="blue", label="training accuracy")
-plt.plot(neighbors_settings, test_accuracy, color="red", label="test accuracy")
-plt.xlabel("No: of neighbors")
+print("Coefficient Values : ", coefficients_w)
+print("Intercept Values : ", intercept_b)
+plt.plot(alpha_settings, training_accuracy, color="blue", label="training accuracy")
+plt.plot(alpha_settings, test_accuracy, color="red", label="test accuracy")
+#plt.plot(alpha_settings, intercept_b, color="yellow", label="intercept values")
+plt.xlabel("Alpha values")
 plt.ylabel("Accuracy")
-plt.legend()
 plt.show()

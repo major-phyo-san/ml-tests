@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
 from matplotlib import pyplot as plt
 
 #load dataset
-dataframe = pd.read_csv("test-datasets/classification/pima-indians-diabetes.data.csv",sep=",")
+dataframe = pd.read_csv("../test-datasets/regression/boston_house_prices.csv",sep=",")
 
 #dataframe shuffling
 dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
@@ -14,24 +14,22 @@ train_set = dataframe.sample(frac=0.8, random_state=200)
 test_set = dataframe.drop(train_set.index)
 
 #training set features and target
-X_train = train_set[["no: of pregnancy","plasma glucose concentration","diastolic blood pressure(mmHg)",
-"triceps skin fold thickness(mm)","2hr serum insulin (mu U/ml)","BMI","diabetes pedigree","age"]]
-y_train = train_set[["diabetic"]]
+X_train = train_set[["CRIM","TAX","AGE","LSTAT","CHAS"]]
+y_train = train_set[["MEDV"]]
 
 #test set features and target
-X_test = test_set[["no: of pregnancy","plasma glucose concentration","diastolic blood pressure(mmHg)",
-"triceps skin fold thickness(mm)","2hr serum insulin (mu U/ml)","BMI","diabetes pedigree","age"]]
-y_test = test_set[["diabetic"]]
+X_test = test_set[["CRIM","TAX","AGE","LSTAT","CHAS"]]
+y_test = test_set[["MEDV"]]
 
 #inspect dataframe
 print(dataframe.describe())
 
-#train the model with K-Nearest Neighbor algorithm with max neighbor 'n_neighbor'
+#train the model with K-Nearest Neighbor algorithm with max neighbor 'n'
 training_accuracy = []
 test_accuracy = []
-neighbors_settings = range(1,5)
+neighbors_settings = range(1,10)
 for n_neighbor in neighbors_settings:
-	knn = KNeighborsClassifier(n_neighbors=n_neighbor)
+	knn = KNeighborsRegressor(n_neighbors=n_neighbor)
 	knn.fit(X_train, y_train)
 	training_accuracy.append(knn.score(X_train, y_train))
 	test_accuracy.append(knn.score(X_test, y_test))

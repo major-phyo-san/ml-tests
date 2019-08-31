@@ -4,7 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from matplotlib import pyplot as plt
 
 #load dataset
-dataframe = pd.read_csv("test-datasets/classification/iris.csv",sep=",")
+dataframe = pd.read_csv("../test-datasets/classification/wine_data.csv",sep=",")
 
 #dataframe shuffling
 dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
@@ -14,12 +14,14 @@ train_set = dataframe.sample(frac=0.8, random_state=200)
 test_set = dataframe.drop(train_set.index)
 
 #training set features and target
-X_train = train_set[["sepal width (cm)", "sepal length (cm)", "petal width (cm)", "petal length (cm)"]]
-y_train = train_set[["species"]]
+X_train = train_set[["alcohol","melic_acid","ash","alcalinity_of_ash","magnesium","total_phenols",
+"flavanoids","nonflavanoid_phenols","proanthocyanins","color_intensity","hue","diluted_wines","proline"]]
+y_train = train_set[["wine_type"]]
 
 #test set features and target
-X_test = test_set[["sepal width (cm)", "sepal length (cm)", "petal width (cm)", "petal length (cm)"]]
-y_test = test_set[["species"]]
+X_test = test_set[["alcohol","melic_acid","ash","alcalinity_of_ash","magnesium","total_phenols",
+"flavanoids","nonflavanoid_phenols","proanthocyanins","color_intensity","hue","diluted_wines","proline"]]
+y_test = test_set[["wine_type"]]
 
 #inspect dataframe
 print(dataframe.describe())

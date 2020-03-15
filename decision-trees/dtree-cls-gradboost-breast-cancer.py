@@ -31,7 +31,7 @@ X_test = test_set[["mean radius","mean texture","mean perimeter","mean area","me
 "worst concave points","worst symmetry","worst fractal dimension"]]
 y_test = test_set[["cancerous"]]
 
-#train the model with Random Forest
+#train the model with GradientBoosting
 d_tree_gbrt = GradientBoostingClassifier(random_state=0, n_estimators=120, max_depth=1, learning_rate=0.1)
 d_tree_gbrt.fit(X_train,y_train)
 training_accuracy = d_tree_gbrt.score(X_train, y_train)

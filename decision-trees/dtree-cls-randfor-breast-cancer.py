@@ -42,8 +42,10 @@ for tree_count in tree_counts:
 	test_accuracy.append(d_tree_forest.score(X_test,y_test))
 
 #determine the accuracy
-print("Training set accuracy : ", training_accuracy)
-print("Test set accuracy : ", test_accuracy)
+for i in training_accuracy.count():
+	print("Training set accuracy : ", training_accuracy)
+	print("Test set accuracy : ", test_accuracy)
+
 plt.plot(tree_counts, training_accuracy, color="blue", label="training accuracy")
 plt.plot(tree_counts, test_accuracy, color="red", label="test accuracy")
 plt.legend()

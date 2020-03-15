@@ -31,11 +31,11 @@ X_test = test_set[["mean radius","mean texture","mean perimeter","mean area","me
 "worst concave points","worst symmetry","worst fractal dimension"]]
 y_test = test_set[["cancerous"]]
 
-#train the model with LogisticRegression
-svm = LinearSVC()
-svm.fit(X_train,y_train)
-training_accuracy = svm.score(X_train,y_train)
-test_accuracy = svm.score(X_test,y_test)
+#train the model with LinearSVC
+linear_svm = LinearSVC()
+linear_svm.fit(X_train,y_train)
+training_accuracy = linear_svm.score(X_train,y_train)
+test_accuracy = linear_svm.score(X_test,y_test)
 
 #determine the accuracy
 print("Training set accuracy : ", training_accuracy)

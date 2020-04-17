@@ -30,7 +30,7 @@ X_test = test_set[["mean radius","mean texture","mean perimeter","mean area","me
 "worst concave points","worst symmetry","worst fractal dimension"]]
 y_test = test_set[["cancerous"]]
 
-mlp = MLPClassifier(algorithm='l-bfgs',random_state=0)
+mlp = MLPClassifier(solver='lbfgs',random_state=0)
 mlp.fit(X_train,y_train)
 training_accuracy = mlp.score(X_train,y_train)
 test_accuracy = mlp.score(X_test,y_test)
